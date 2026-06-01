@@ -112,19 +112,66 @@ void addFirst(LIST *lp, void *item) {
     lp->count++;
 }
 
+void *removeFirst(LIST *lp) {
+    assert(lp != NULL && lp->count > 0);
+    
+    NODE *head = lp->head;
+    void *item = head->data[head->first]; 
+    
+    // Step the first index forward circularly
+    head->first = (head->first + 1) % head->length;
+    head->count--;
+    lp->count--;
+    
+    if (head->count == 0) {
+        lp->head = head->next;
+        if (lp->head != NULL) {
+            lp->head->prev = NULL;
+        } else {
+            lp->tail = NULL;
+        }
+        free(head->data);
+        free(head);
+    }
+    
+    return item;
+}
+
+void *removeLast(LIST *lp) {
+    assert(lp != NULL && lp->count > 0);
+    
+    NODE *tail = lp->tail;
+    int lastIndex = (tail->first + tail->count - 1) % tail->length;
+    void *item = tail->data[lastIndex]; 
+    
+    tail->count--;
+    lp->count--;
+    
+    if (tail->count == 0) {
+        lp->tail = tail->prev;
+        if (lp->tail != NULL) {
+            lp->tail->next = NULL;
+        } else {
+            lp->head = NULL; 
+        }
+        free(tail->data);
+        free(tail);
+    }
+    
+    return item;
+}
+
 void *getItem(LIST *lp, int index) {
     assert(lp != NULL);
     assert(index >= 0 && index < lp->count);
     
     NODE *current = lp->head;
     
-    // Traverse nodes, subtracting node counts from our target index
     while (index >= current->count) {
         index -= current->count;
         current = current->next;
     }
     
-    // We found the correct node. Now grab the item using circular math.
     int targetIndex = (current->first + index) % current->length;
     return current->data[targetIndex];
 }

@@ -20,6 +20,7 @@ struct list {
     int count;
 };
 
+//creates and returns a new clean node with capacity spots of void pointers. O(1) runtime
 NODE *createNode(int capacity) {
     NODE *newNode = malloc(sizeof(NODE));
     assert(newNode != NULL);
@@ -36,6 +37,7 @@ NODE *createNode(int capacity) {
     return newNode;
 }
 
+//Creates a clean list struct. O(n) runtime 
 LIST *createList(void) {
     LIST *lp = malloc(sizeof(struct list));
     assert(lp != NULL);
@@ -45,13 +47,14 @@ LIST *createList(void) {
     return lp;
 }
 
+//destroys the whole list by first freeing the 
 void destroyList(LIST *lp) {
     assert(lp != NULL);
     NODE *current = lp->head;
     while (current != NULL) {
         NODE *next = current->next;
-        free(current->data); // Free the inner array
-        free(current);       // Free the node
+        free(current->data); 
+        free(current);  
         current = next;
     }
     free(lp);

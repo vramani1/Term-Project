@@ -61,3 +61,53 @@ int numItems(LIST *lp) {
     assert(lp != NULL);
     return lp->count;
 }
+
+void addLast(LIST *lp, void *item) {
+    assert(lp != NULL);
+    
+    if (lp->tail == NULL || lp->tail->count == lp->tail->length) {
+        int new_capacity = (lp->tail == NULL) ? INITIAL_CAPACITY : (lp->tail->length * 2);
+        NODE *newNode = createNode(new_capacity);
+        
+        if (lp->tail == NULL) { 
+            lp->head = newNode;
+            lp->tail = newNode;
+        } else {             
+            newNode->prev = lp->tail;
+            lp->tail->next = newNode;
+            lp->tail = newNode;
+        }
+    }
+    
+    NODE *tail = lp->tail;
+    int insertIndex = (tail->first + tail->count) % tail->length;
+    tail->data[insertIndex] = item;
+    
+    tail->count++;
+    lp->count++;
+}
+
+void addFirst(LIST *lp, void *item) {
+    assert(lp != NULL);
+
+    if (lp->head == NULL || lp->head->count == lp->head->length) {
+        int new_capacity = (lp->head == NULL) ? INITIAL_CAPACITY : (lp->head->length * 2);
+        NODE *newNode = createNode(new_capacity);
+        
+        if (lp->head == NULL) { 
+            lp->head = newNode;
+            lp->tail = newNode;
+        } else {               
+            newNode->next = lp->head;
+            lp->head->prev = newNode;
+            lp->head = newNode;
+        }
+    }
+    
+    NODE *head = lp->head;
+    head->first = (head->first - 1 + head->length) % head->length; 
+    head->data[head->first] = item;
+    
+    head->count++;
+    lp->count++;
+}

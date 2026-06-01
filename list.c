@@ -111,3 +111,20 @@ void addFirst(LIST *lp, void *item) {
     head->count++;
     lp->count++;
 }
+
+void *getItem(LIST *lp, int index) {
+    assert(lp != NULL);
+    assert(index >= 0 && index < lp->count);
+    
+    NODE *current = lp->head;
+    
+    // Traverse nodes, subtracting node counts from our target index
+    while (index >= current->count) {
+        index -= current->count;
+        current = current->next;
+    }
+    
+    // We found the correct node. Now grab the item using circular math.
+    int targetIndex = (current->first + index) % current->length;
+    return current->data[targetIndex];
+}

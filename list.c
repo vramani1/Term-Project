@@ -1,3 +1,6 @@
+//Varun Ramani, 6/1/2025, Term Project, this project stores a circular queue through a linked list that storees nodes with arrays that double in size with each creation. 
+//This allows for O(logn) search times
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -47,7 +50,7 @@ LIST *createList(void) {
     return lp;
 }
 
-//destroys the whole list by first freeing the 
+//destroys the whole list by first freeing the data then the node. O(logn) runtime
 void destroyList(LIST *lp) {
     assert(lp != NULL);
     NODE *current = lp->head;
@@ -60,11 +63,13 @@ void destroyList(LIST *lp) {
     free(lp);
 }
 
+//Returns number of total data items in lp. O(1) runtime
 int numItems(LIST *lp) {
     assert(lp != NULL);
     return lp->count;
 }
 
+//Adds an element, item, to the end of the data in lp, creating a new node at end of queue if there is no space left in the current one. O(1) runtime.
 void addLast(LIST *lp, void *item) {
     assert(lp != NULL);
     
@@ -90,6 +95,7 @@ void addLast(LIST *lp, void *item) {
     lp->count++;
 }
 
+//Adds an element to the front of the circular queue in lp, creating a new node at front if full. O(1) runtime.
 void addFirst(LIST *lp, void *item) {
     assert(lp != NULL);
 
@@ -115,6 +121,7 @@ void addFirst(LIST *lp, void *item) {
     lp->count++;
 }
 
+//Removes the first element in the queue, frees node if no more elements in node. O(1) runtime.
 void *removeFirst(LIST *lp) {
     assert(lp != NULL && lp->count > 0);
     
@@ -140,6 +147,7 @@ void *removeFirst(LIST *lp) {
     return item;
 }
 
+//Removes the last element in lps tail node, removing node if no more data in node. O(1) runtime.
 void *removeLast(LIST *lp) {
     assert(lp != NULL && lp->count > 0);
     
@@ -164,6 +172,7 @@ void *removeLast(LIST *lp) {
     return item;
 }
 
+//Returns the data inside index data slot in lp as a void pointer. O(logn) runtime since it skips through the doubling size lists.
 void *getItem(LIST *lp, int index) {
     assert(lp != NULL);
     assert(index >= 0 && index < lp->count);
